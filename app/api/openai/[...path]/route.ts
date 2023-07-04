@@ -1,7 +1,8 @@
 import { OpenaiPath } from "@/app/constant";
 import { prettyObject } from "@/app/utils/format";
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "../../auth";
+//import { auth } from "../../auth";
+import { auth } from "../../oauth";
 import { requestOpenai } from "../../common";
 
 const ALLOWD_PATH = new Set(Object.values(OpenaiPath));
@@ -31,10 +32,15 @@ async function handle(
     );
   }
 
-  const authResult = auth(req);
-  if (authResult.error) {
+  const authResult = await auth(req);
+
+  if (authResult.error && authResult.code == 401) {
     return NextResponse.json(authResult, {
       status: 401,
+    });
+  } else if (authResult.error && authResult.code == -1) {
+    return NextResponse.json(authResult, {
+      status: 200,
     });
   }
 

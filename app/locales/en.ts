@@ -5,9 +5,10 @@ const en: LocaleType = {
   WIP: "Coming Soon...",
   Error: {
     Unauthorized:
-      "Unauthorized access, please enter access code in [auth](/#/auth) page.",
+      "Unauthorized access, please enter your jobNumber and password in [auth](/#/auth) page.",
   },
   Auth: {
+    Account: "Input Your JobNumber",
     Title: "Need Access Code",
     Tips: "Please enter access code below",
     Input: "access code",

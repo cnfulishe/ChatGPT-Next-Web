@@ -22,15 +22,23 @@
 
   .auth-input {
     margin: 3vh 0;
+    text-align: left;
   }
 
   .auth-actions {
     display: flex;
-    justify-content: center;
+    justify-content: left;
     flex-direction: column;
 
     button:not(:last-child) {
       margin-bottom: 10px;
     }
+  }
+  .error-info{
+    justify-content: center;
+    align-items: center;
+    margin: 10px;
+    color: red;
+    font-size: 13px;
   }
 }

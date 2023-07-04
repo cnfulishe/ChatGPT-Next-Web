@@ -8,6 +8,7 @@ const ar: PartialLocaleType = {
       "غير مصرح بالوصول، يرجى إدخال رمز الوصول [auth](/#/auth) في صفحة المصادقة.",
   },
   Auth: {
+    Account: "Input Your JobNumber",
     Title: "تحتاج إلى رمز الوصول",
     Tips: "يرجى إدخال رمز الوصول أدناه",
     Input: "رمز الوصول",

@@ -735,7 +735,9 @@ export function Chat() {
   ) {
     const copiedHello = Object.assign({}, BOT_HELLO);
     if (!accessStore.isAuthorized()) {
-      copiedHello.content = Locale.Error.Unauthorized;
+      //TODO 调整的地方
+      navigate(Path.Auth);
+      //copiedHello.content = Locale.Error.Unauthorized;
     }
     context.push(copiedHello);
   }

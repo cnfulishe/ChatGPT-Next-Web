@@ -9,12 +9,16 @@ import { getClientConfig } from "../config/client";
 export interface AccessControlStore {
   accessCode: string;
   token: string;
-
+  account: string;
+  password: string;
   needCode: boolean;
   hideUserApiKey: boolean;
   openaiUrl: string;
   hideBalanceQuery: boolean;
-
+  errorInfo: string;
+  updateErrorInfo: (_: string) => void;
+  updateAccount: (_: string) => void;
+  updatePassword: (_: string) => void;
   updateToken: (_: string) => void;
   updateCode: (_: string) => void;
   updateOpenAiUrl: (_: string) => void;
@@ -35,14 +39,24 @@ export const useAccessStore = create<AccessControlStore>()(
       token: "",
       accessCode: "",
       needCode: true,
-      hideUserApiKey: false,
+      hideUserApiKey: true,
       openaiUrl: DEFAULT_OPENAI_URL,
       hideBalanceQuery: false,
-
+      account: "",
+      password: "",
+      errorInfo: "",
+      updateErrorInfo(errorInfo: string) {
+        set(() => ({ errorInfo: errorInfo }));
+      },
       enabledAccessControl() {
         get().fetch();
-
         return get().needCode;
+      },
+      updateAccount(account: string) {
+        set(() => ({ account: account }));
+      },
+      updatePassword(password: string) {
+        set(() => ({ password: password }));
       },
       updateCode(code: string) {
         set(() => ({ accessCode: code }));

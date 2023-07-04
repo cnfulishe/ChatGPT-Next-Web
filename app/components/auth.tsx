@@ -5,14 +5,32 @@ import { useNavigate } from "react-router-dom";
 import { Path } from "../constant";
 import { useAccessStore } from "../store";
 import Locale from "../locales";
-
+import { userValid } from "../api/user_service";
 import BotIcon from "../icons/bot.svg";
 
 export function AuthPage() {
   const navigate = useNavigate();
   const access = useAccessStore();
 
-  const goHome = () => navigate(Path.Home);
+  const goValida = async () => {
+    access.updateErrorInfo("");
+    if (access.account != "" && access.password != "") {
+      const response = await userValid(access.account, access.password);
+      const resJson = await response.json();
+      if (resJson.success) {
+        access.updateCode(resJson.data);
+        navigate(Path.Home);
+      } else {
+        access.updateErrorInfo(resJson.msg);
+      }
+    } else {
+      access.updateErrorInfo("账号和密码不能为空！");
+    }
+  };
+  const goBack = () => {
+    access.updateCode("");
+    navigate(Path.Home);
+  };
 
   return (
     <div className={styles["auth-page"]}>
@@ -21,25 +39,48 @@ export function AuthPage() {
       </div>
 
       <div className={styles["auth-title"]}>{Locale.Auth.Title}</div>
+
       <div className={styles["auth-tips"]}>{Locale.Auth.Tips}</div>
 
-      <input
-        className={styles["auth-input"]}
-        type="password"
-        placeholder={Locale.Auth.Input}
-        value={access.accessCode}
-        onChange={(e) => {
-          access.updateCode(e.currentTarget.value);
-        }}
-      />
+      {access.errorInfo != "" ? (
+        <div className={styles["error-info"]}>
+          <span>{access.errorInfo}</span>
+        </div>
+      ) : (
+        <div className={styles["error-info"]} />
+      )}
+      <div>
+        工号:&nbsp;&nbsp;
+        <input
+          className={styles["auth-input"]}
+          type="text"
+          placeholder={Locale.Auth.Account}
+          value={access.account}
+          onChange={(e) => {
+            access.updateErrorInfo("");
+            access.updateAccount(e.currentTarget.value);
+          }}
+        />
+        &nbsp;&nbsp;&nbsp;&nbsp; 将军令:&nbsp;&nbsp;
+        <input
+          className={styles["auth-input"]}
+          type="password"
+          placeholder={Locale.Auth.Input}
+          value={access.password}
+          onChange={(e) => {
+            access.updateErrorInfo("");
+            access.updatePassword(e.currentTarget.value);
+          }}
+        />
+      </div>
 
       <div className={styles["auth-actions"]}>
         <IconButton
           text={Locale.Auth.Confirm}
           type="primary"
-          onClick={goHome}
+          onClick={goValida}
         />
-        <IconButton text={Locale.Auth.Later} onClick={goHome} />
+        <IconButton text={Locale.Auth.Later} onClick={goBack} />
       </div>
     </div>
   );
