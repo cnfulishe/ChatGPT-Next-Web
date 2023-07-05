@@ -340,6 +340,10 @@ export function Settings() {
   };
   const [loadingUsage, setLoadingUsage] = useState(false);
   function checkUsage(force = false) {
+    if (accessStore.hideBalanceQuery) {
+      return;
+    }
+
     setLoadingUsage(true);
     updateStore.updateUsage(force).finally(() => {
       setLoadingUsage(false);
@@ -578,7 +582,19 @@ export function Settings() {
               <></>
             )
           }
-
+          <ListItem
+            title={Locale.Settings.Endpoint.Title}
+            subTitle={Locale.Settings.Endpoint.SubTitle}
+          >
+            <input
+              type="text"
+              value={accessStore.openaiUrl}
+              placeholder="https://api.openai.com/"
+              onChange={(e) =>
+                accessStore.updateOpenAiUrl(e.currentTarget.value)
+              }
+            ></input>
+          </ListItem>
           {!accessStore.hideUserApiKey ? (
             <ListItem
               title={Locale.Settings.Token.Title}

@@ -2,7 +2,7 @@ import { NextRequest } from "next/server";
 import { getServerSideConfig } from "../config/server";
 import md5 from "spark-md5";
 import { ACCESS_CODE_PREFIX } from "../constant";
-import { userAuth } from "./user_service";
+import { userTokenAuth } from "./user_service";
 
 function getIP(req: NextRequest) {
   let ip = req.ip ?? req.headers.get("x-real-ip");
@@ -25,30 +25,38 @@ function parseApiKey(bearToken: string) {
   };
 }
 
-export async function auth(req: NextRequest) {
+export async function authHandler(req: NextRequest) {
   const authToken = req.headers.get("Authorization") ?? "";
 
   // check if it is openai api key or user token
   const { accessCode, apiKey: token } = parseApiKey(authToken);
-  console.log("这是系统的accessCode" + accessCode);
-  // if user does not provide an api key, inject system api key
-  if (accessCode) {
-    const accessAuth = await userAuth(accessCode);
-    const authResult = await accessAuth.json();
 
-    if (authResult.code == 1) {
-      console.log(authResult);
-      let apiKey = authResult.data;
-      console.log("[Auth] use system api key");
-      req.headers.set("Authorization", `Bearer ${apiKey}`);
-      return {
-        error: false,
-      };
-    } else {
+  // if user does not provide an api key, inject system api key
+  if (accessCode != undefined) {
+    try {
+      console.log("现在进行accessAuth");
+      const accessAuth = await userTokenAuth(accessCode);
+      console.log("结束请求accessAuth");
+      const authResult = await accessAuth.json();
+
+      if (authResult.code == 1) {
+        let apiKey = authResult.data;
+        console.log("[Auth] use system api key");
+        req.headers.set("Authorization", `Bearer ${apiKey}`);
+        return {
+          error: false,
+        };
+      } else {
+        return {
+          error: true,
+          msg: authResult.msg,
+          code: authResult.code,
+        };
+      }
+    } catch (e) {
       return {
         error: true,
-        msg: authResult.msg,
-        code: authResult.code,
+        msg: e,
       };
     }
   } else {

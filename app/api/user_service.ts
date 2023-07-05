@@ -16,10 +16,11 @@ export async function userValid(account: String, password: String) {
       "Content-Type": "application/json",
     },
     method: "POST",
+    mode: "cors",
   });
 }
 
-export async function userAuth(accessToken: String) {
+export async function userTokenAuth(accessToken: String) {
   return await fetch(USER_TOKEN_AUTH, {
     body: JSON.stringify({
       access_token: accessToken,
@@ -28,6 +29,7 @@ export async function userAuth(accessToken: String) {
       "Content-Type": "application/json",
     },
     method: "POST",
+    mode: "cors",
   });
 }
 
@@ -46,5 +48,6 @@ export async function userAuthingValid(
       Authorization: `${idToken}`,
     },
     method: "POST",
+    mode: "cors",
   });
 }

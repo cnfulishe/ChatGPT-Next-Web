@@ -36,7 +36,7 @@ export function LoginPage() {
   const guard = useGuard();
   guard.start("#authind-container").then((userInfo: User) => {
     console.info("用户信息:");
-    console.info(userInfo.token, userInfo.id, userInfo.userPoolId);
+
     userAuthingValid(userInfo.token ?? "", userInfo.id, userInfo.userPoolId)
       .then((res) => res.json())
       .then((resJson) => {

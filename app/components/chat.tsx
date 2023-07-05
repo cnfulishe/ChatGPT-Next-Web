@@ -42,12 +42,11 @@ import {
   Theme,
   useAppConfig,
   DEFAULT_TOPIC,
-  ALL_MODELS,
+  ModelType,
 } from "../store";
 
 import {
   copyToClipboard,
-  downloadAs,
   selectOrCopy,
   autoGrowTextArea,
   useMobileScreen,
@@ -387,14 +386,13 @@ export function ChatActions(props: {
 
   // switch model
   const currentModel = chatStore.currentSession().mask.modelConfig.model;
-
   function nextModel() {
-    const models = ALL_MODELS.filter((m) => m.available).map((m) => m.name);
+    const models = config.models.filter((m) => m.available).map((m) => m.name);
     const modelIndex = models.indexOf(currentModel);
     const nextIndex = (modelIndex + 1) % models.length;
     const nextModel = models[nextIndex];
     chatStore.updateCurrentSession((session) => {
-      session.mask.modelConfig.model = nextModel;
+      session.mask.modelConfig.model = nextModel as ModelType;
       session.mask.syncGlobalConfig = false;
     });
   }
@@ -730,7 +728,7 @@ export function Chat() {
     : session.mask.context.slice();
 
   const accessStore = useAccessStore();
-  const guard = useGuard();
+
   if (
     context.length === 0 &&
     session.messages.at(0)?.content !== BOT_HELLO.content
@@ -738,6 +736,7 @@ export function Chat() {
     const copiedHello = Object.assign({}, BOT_HELLO);
     //TODO
     if (!accessStore.isAuthorized()) {
+      //copiedHello.content = Locale.Error.Unauthorized;
       accessStore.updateCode("");
       navigate(Path.Auth);
     } else {
@@ -893,7 +892,8 @@ export function Chat() {
           const showActions =
             !isUser &&
             i > 0 &&
-            !(message.preview || message.content.length === 0);
+            !(message.preview || message.content.length === 0) &&
+            i >= context.length; // do not show actions for context prompts
           const showTyping = message.preview || message.streaming;
 
           const shouldShowClearContextDivider = i === clearContextIndex - 1;
