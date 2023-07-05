@@ -1,7 +1,8 @@
 "use client";
 
 require("../polyfill");
-
+import { GuardProvider } from "@authing/guard-react18";
+import "@authing/guard-react18/dist/esm/guard.min.css";
 import { useState, useEffect } from "react";
 
 import styles from "./home.module.scss";
@@ -112,6 +113,7 @@ function Screen() {
   const location = useLocation();
   const isHome = location.pathname === Path.Home;
   const isAuth = location.pathname === Path.Auth;
+  const isAuthing = location.pathname === Path.Authing;
   const isMobileScreen = useMobileScreen();
 
   useEffect(() => {
@@ -119,36 +121,48 @@ function Screen() {
   }, []);
 
   return (
-    <div
-      className={
-        styles.container +
-        ` ${
-          config.tightBorder && !isMobileScreen
-            ? styles["tight-container"]
-            : styles.container
-        } ${getLang() === "ar" ? styles["rtl-screen"] : ""}`
-      }
+    <GuardProvider
+      appId="64a3ca9d7ca18ce361b14e0c"
+      isSSO={true}
+      redirectUri="https://webhook.site/649c8390-18e4-4719-bffe-2c0882e53cfa"
     >
-      {isAuth ? (
-        <>
-          <AuthPage />
-        </>
-      ) : (
-        <>
-          <SideBar className={isHome ? styles["sidebar-show"] : ""} />
+      <div
+        className={
+          styles.container +
+          ` ${
+            config.tightBorder && !isMobileScreen
+              ? styles["tight-container"]
+              : styles.container
+          } ${getLang() === "ar" ? styles["rtl-screen"] : ""}`
+        }
+      >
+        {(() => {
+          if (isAuth) {
+            return (
+              <>
+                <AuthPage />
+              </>
+            );
+          } else {
+            return (
+              <>
+                <SideBar className={isHome ? styles["sidebar-show"] : ""} />
 
-          <div className={styles["window-content"]} id={SlotID.AppBody}>
-            <Routes>
-              <Route path={Path.Home} element={<Chat />} />
-              <Route path={Path.NewChat} element={<NewChat />} />
-              <Route path={Path.Masks} element={<MaskPage />} />
-              <Route path={Path.Chat} element={<Chat />} />
-              <Route path={Path.Settings} element={<Settings />} />
-            </Routes>
-          </div>
-        </>
-      )}
-    </div>
+                <div className={styles["window-content"]} id={SlotID.AppBody}>
+                  <Routes>
+                    <Route path={Path.Home} element={<Chat />} />
+                    <Route path={Path.NewChat} element={<NewChat />} />
+                    <Route path={Path.Masks} element={<MaskPage />} />
+                    <Route path={Path.Chat} element={<Chat />} />
+                    <Route path={Path.Settings} element={<Settings />} />
+                  </Routes>
+                </div>
+              </>
+            );
+          }
+        })()}
+      </div>
+    </GuardProvider>
   );
 }
 

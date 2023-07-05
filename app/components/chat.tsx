@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
-
+import { GuardProvider, useGuard, User } from "@authing/guard-react18";
 import SendWhiteIcon from "../icons/send-white.svg";
 import BrainIcon from "../icons/brain.svg";
 import RenameIcon from "../icons/rename.svg";
@@ -372,6 +372,7 @@ export function ChatActions(props: {
 
   // switch themes
   const theme = config.theme;
+
   function nextTheme() {
     const themes = [Theme.Auto, Theme.Light, Theme.Dark];
     const themeIndex = themes.indexOf(theme);
@@ -386,6 +387,7 @@ export function ChatActions(props: {
 
   // switch model
   const currentModel = chatStore.currentSession().mask.modelConfig.model;
+
   function nextModel() {
     const models = ALL_MODELS.filter((m) => m.available).map((m) => m.name);
     const modelIndex = models.indexOf(currentModel);
@@ -728,18 +730,19 @@ export function Chat() {
     : session.mask.context.slice();
 
   const accessStore = useAccessStore();
-
+  const guard = useGuard();
   if (
     context.length === 0 &&
     session.messages.at(0)?.content !== BOT_HELLO.content
   ) {
     const copiedHello = Object.assign({}, BOT_HELLO);
+    //TODO
     if (!accessStore.isAuthorized()) {
-      //TODO 调整的地方
+      accessStore.updateCode("");
       navigate(Path.Auth);
-      //copiedHello.content = Locale.Error.Unauthorized;
+    } else {
+      context.push(copiedHello);
     }
-    context.push(copiedHello);
   }
 
   // clear context index = context length + index in messages

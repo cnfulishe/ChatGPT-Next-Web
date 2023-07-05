@@ -3,7 +3,9 @@
 .chat-input-actions {
   display: flex;
   flex-wrap: wrap;
-
+  *,:after,:before {
+    box-sizing: content-box;
+  }
   .chat-input-action {
     display: inline-flex;
     border-radius: 20px;

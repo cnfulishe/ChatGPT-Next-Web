@@ -3,6 +3,9 @@ const USER_VALID_URL =
 const USER_TOKEN_AUTH =
   "https://public-api.zielsmart.com/v1/thirdservice/chatgpt/user/auth";
 
+const USER_AUTHING_VALID_URL =
+  "https://public-api.zielsmart.com/v1/thirdservice/chatgpt/user/authingValid";
+
 export async function userValid(account: String, password: String) {
   return await fetch(USER_VALID_URL, {
     body: JSON.stringify({
@@ -23,6 +26,24 @@ export async function userAuth(accessToken: String) {
     }),
     headers: {
       "Content-Type": "application/json",
+    },
+    method: "POST",
+  });
+}
+
+export async function userAuthingValid(
+  idToken: String,
+  userId: String,
+  userPoolId: String,
+) {
+  return await fetch(USER_AUTHING_VALID_URL, {
+    body: JSON.stringify({
+      userId: userId,
+      userPoolId: userPoolId,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `${idToken}`,
     },
     method: "POST",
   });
