@@ -109,7 +109,8 @@ export const useUpdateStore = create<UpdateStore>()(
 
         try {
           const usage = await api.llm.usage();
-
+          console.log("usage:");
+          console.log(usage);
           if (usage) {
             set(() => ({
               used: usage.used,

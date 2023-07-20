@@ -29,24 +29,36 @@ export function LoginPage() {
       access.updateErrorInfo("账号和密码不能为空！");
     }
   };
-  const goHome = (code: string) => {
-    access.updateCode(code);
-    navigate(Path.Home);
+  const goHome = () => {
+    guard.start("#authind-container").then((userInfo: User) => {
+      console.info("用户信息:");
+      console.info(userInfo);
+      authingValid(userInfo.token ?? "", userInfo.id, userInfo.userPoolId);
+    });
   };
-  const guard = useGuard();
-  guard.start("#authind-container").then((userInfo: User) => {
-    console.info("用户信息:");
-
-    userAuthingValid(userInfo.token ?? "", userInfo.id, userInfo.userPoolId)
+  const authingValid = (token: string, id: string, userPoolId: string) => {
+    userAuthingValid(token, id, userPoolId)
       .then((res) => res.json())
       .then((resJson) => {
         console.log(resJson);
         if (resJson.success) {
-          goHome(resJson.data);
+          access.updateCode(resJson.data);
+          navigate(Path.Home);
         } else {
         }
       });
+  };
+  const guard = useGuard();
+  guard.trackSession().then((userInfo) => {
+    console.log("获取到用户信息");
+    console.log(userInfo);
+    if (userInfo === null || userInfo === undefined) {
+      goHome();
+    } else {
+      authingValid(userInfo.token ?? "", userInfo.id, userInfo.userPoolId);
+    }
   });
+
   return (
     <div id="authind-container"></div>
     // <div className={styles["auth-page"]}>

@@ -36,9 +36,9 @@ export async function authHandler(req: NextRequest) {
     try {
       console.log("现在进行accessAuth");
       const accessAuth = await userTokenAuth(accessCode);
-      console.log("结束请求accessAuth");
-      const authResult = await accessAuth.json();
 
+      const authResult = await accessAuth.json();
+      console.log("结束请求accessAuth" + authResult);
       if (authResult.code == 1) {
         let apiKey = authResult.data;
         console.log("[Auth] use system api key");

@@ -122,9 +122,9 @@ function Screen() {
 
   return (
     <GuardProvider
-      appId="64a3ca9d7ca18ce361b14e0c"
+      //appId="64ababc40c0787f658c225cf"
+      appId="64b7841c23bd921d16eccc07"
       isSSO={true}
-      redirectUri="https://webhook.site/649c8390-18e4-4719-bffe-2c0882e53cfa"
     >
       <div
         className={

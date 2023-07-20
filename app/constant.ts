@@ -55,7 +55,9 @@ export const OpenaiPath = {
   SubsPath: "dashboard/billing/subscription",
   ListModelPath: "v1/models",
 };
-
+export const AuthingPath = {
+  AuthingPath: "callback",
+};
 export const DEFAULT_INPUT_TEMPLATE = `{{input}}`; // input / time / model / lang
 export const DEFAULT_SYSTEM_TEMPLATE = `
 You are ChatGPT, a large language model trained by OpenAI.
