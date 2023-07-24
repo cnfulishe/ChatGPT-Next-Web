@@ -124,6 +124,7 @@ function Screen() {
     <GuardProvider
       //appId="64ababc40c0787f658c225cf"
       appId="64b7841c23bd921d16eccc07"
+      host="https://sso.ziel.cn"
       isSSO={true}
     >
       <div
