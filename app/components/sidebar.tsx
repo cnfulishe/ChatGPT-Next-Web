@@ -10,12 +10,12 @@ import AddIcon from "../icons/add.svg";
 import CloseIcon from "../icons/close.svg";
 import MaskIcon from "../icons/mask.svg";
 import PluginIcon from "../icons/plugin.svg";
+import DragIcon from "../icons/drag.svg";
 import { getServerSideConfig } from "../config/server";
-
 const serverConfig = getServerSideConfig();
 import Locale from "../locales";
 
-import { useAppConfig, useChatStore } from "../store";
+import { useAppConfig, useChatStore, useAccessStore } from "../store";
 
 import {
   MAX_SIDEBAR_WIDTH,
@@ -103,12 +103,16 @@ function useDragSideBar() {
 
 export function SideBar(props: { className?: string }) {
   const chatStore = useChatStore();
-
+  const accessStore = useAccessStore();
   // drag side bar
   const { onDragMouseDown, shouldNarrow } = useDragSideBar();
   const navigate = useNavigate();
   const config = useAppConfig();
-
+  const imageStyle = {
+    width: "43px", // 设置宽度
+    height: "43px", // 设置高度
+    borderRadius: "20px", //左上角
+  };
   useHotKey();
 
   return (
@@ -204,7 +208,9 @@ export function SideBar(props: { className?: string }) {
       <div
         className={styles["sidebar-drag"]}
         onMouseDown={(e) => onDragMouseDown(e as any)}
-      ></div>
+      >
+        <DragIcon />
+      </div>
     </div>
   );
 }

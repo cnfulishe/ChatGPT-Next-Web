@@ -32,17 +32,22 @@ export function LoginPage() {
   const goHome = () => {
     guard.start("#authind-container").then((userInfo: User) => {
       console.info("用户信息:");
-      console.info(userInfo);
-      authingValid(userInfo.token ?? "", userInfo.id, userInfo.userPoolId);
+      authingValid(userInfo);
     });
   };
-  const authingValid = (token: string, id: string, userPoolId: string) => {
-    userAuthingValid(token, id, userPoolId)
+  const authingValid = (userInfo: User) => {
+    const { token, id, userPoolId } = userInfo;
+    userAuthingValid(token ?? "", id, userPoolId)
       .then((res) => res.json())
       .then((resJson) => {
         console.log(resJson);
         if (resJson.success) {
+          access.updateUserInfo({
+            userName: userInfo.name ?? "",
+            userAvatar: userInfo.photo ?? "",
+          });
           access.updateCode(resJson.data);
+          console.log(access.userInfo);
           navigate(Path.Home);
         } else {
         }
@@ -55,7 +60,7 @@ export function LoginPage() {
     if (userInfo === null || userInfo === undefined) {
       goHome();
     } else {
-      authingValid(userInfo.token ?? "", userInfo.id, userInfo.userPoolId);
+      authingValid(userInfo);
     }
   });
 

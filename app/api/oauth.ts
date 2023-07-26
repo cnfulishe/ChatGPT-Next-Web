@@ -34,11 +34,11 @@ export async function authHandler(req: NextRequest) {
   // if user does not provide an api key, inject system api key
   if (accessCode != undefined) {
     try {
-      console.log("现在进行accessAuth");
+      console.log("现在进行accessAuth:" + accessCode);
       const accessAuth = await userTokenAuth(accessCode);
 
       const authResult = await accessAuth.json();
-      console.log("结束请求accessAuth" + authResult);
+      console.log("结束请求accessAuth:" + authResult.code);
       if (authResult.code == 1) {
         let apiKey = authResult.data;
         console.log("[Auth] use system api key");
