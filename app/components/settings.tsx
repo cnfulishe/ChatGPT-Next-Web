@@ -324,14 +324,15 @@ export function Settings() {
   const [checkingUpdate, setCheckingUpdate] = useState(false);
   const currentVersion = updateStore.formatVersion(updateStore.version);
   const remoteId = updateStore.formatVersion(updateStore.remoteVersion);
-  const hasNewVersion = currentVersion !== remoteId;
+  //const hasNewVersion = currentVersion !== remoteId;
+  const hasNewVersion = false;
   const updateUrl = getClientConfig()?.isApp ? RELEASE_URL : UPDATE_URL;
 
   function checkUpdate(force = false) {
     setCheckingUpdate(false);
-    // updateStore.getLatestVersion(force).then(() => {
-    //   setCheckingUpdate(false);
-    // });
+    updateStore.getLatestVersion(force).then(() => {
+      setCheckingUpdate(false);
+    });
 
     console.log("[Update] local version ", updateStore.version);
     console.log("[Update] remote version ", updateStore.version);
@@ -446,21 +447,7 @@ export function Settings() {
                 ? Locale.Settings.Update.FoundUpdate(remoteId ?? "ERROR")
                 : Locale.Settings.Update.IsLatest
             }
-          >
-            {checkingUpdate ? (
-              <LoadingIcon />
-            ) : hasNewVersion ? (
-              <Link href={updateUrl} target="_blank" className="link">
-                {Locale.Settings.Update.GoToUpdate}
-              </Link>
-            ) : (
-              <IconButton
-                icon={<ResetIcon></ResetIcon>}
-                text={Locale.Settings.Update.CheckUpdate}
-                onClick={() => checkUpdate(true)}
-              />
-            )}
-          </ListItem>
+          ></ListItem>
 
           <ListItem title={Locale.Settings.SendKey}>
             <Select
