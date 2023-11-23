@@ -1,10 +1,10 @@
 const USER_VALID_URL =
-  "https://internal-api.zielsmart.com/v1/thirdservice/chatgpt/user/valid";
+  "https://ekey.zielsmart.com/sso/authing/chatgpt/user/valid";
 const USER_TOKEN_AUTH =
-  "https://internal-api.zielsmart.com/v1/thirdservice/chatgpt/user/auth";
+  "https://ekey.zielsmart.com/sso/authing/chatgpt/user/auth";
 
 const USER_AUTHING_VALID_URL =
-  "https://internal-api.zielsmart.com/v1/thirdservice/chatgpt/user/authingValid";
+  "https://ekey.zielsmart.com/sso/authing/chatgpt/user/authingValid";
 
 export async function userValid(account: String, password: String) {
   return await fetch(USER_VALID_URL, {
