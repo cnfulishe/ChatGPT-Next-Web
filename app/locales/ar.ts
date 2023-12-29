@@ -8,9 +8,9 @@ const ar: PartialLocaleType = {
       "غير مصرح بالوصول، يرجى إدخال رمز الوصول [auth](/#/auth) في صفحة المصادقة.",
   },
   Auth: {
-    Account: "Input Your JobNumber",
     Title: "تحتاج إلى رمز الوصول",
     Tips: "يرجى إدخال رمز الوصول أدناه",
+    SubTips: "أو أدخل مفتاح واجهة برمجة تطبيقات OpenAI الخاص بك",
     Input: "رمز الوصول",
     Confirm: "تأكيد",
     Later: "لاحقًا",
@@ -167,11 +167,7 @@ ${builtin} مدمجة، ${custom} تم تعريفها من قبل المستخد
       Title: "حد الضغط للتاريخ",
       SubTitle: "سيتم الضغط إذا تجاوزت طول الرسائل غير المضغوطة الحد المحدد",
     },
-    Token: {
-      Title: "مفتاح API",
-      SubTitle: "استخدم مفتاحك لتجاوز حد رمز الوصول",
-      Placeholder: "مفتاح OpenAI API",
-    },
+
     Usage: {
       Title: "رصيد الحساب",
       SubTitle(used: any, total: any) {
@@ -181,15 +177,7 @@ ${builtin} مدمجة، ${custom} تم تعريفها من قبل المستخد
       Check: "التحقق",
       NoAccess: "أدخل مفتاح API للتحقق من الرصيد",
     },
-    AccessCode: {
-      Title: "رمز الوصول",
-      SubTitle: "تم تمكين التحكم في الوصول",
-      Placeholder: "رمز الوصول المطلوب",
-    },
-    Endpoint: {
-      Title: "نقطة النهاية",
-      SubTitle: "يجب أن تبدأ نقطة النهاية المخصصة بـ http(s)://",
-    },
+
     Model: "النموذج",
     Temperature: {
       Title: "الحرارة",
@@ -233,6 +221,9 @@ ${builtin} مدمجة، ${custom} تم تعريفها من قبل المستخد
   },
   Plugin: {
     Name: "المكوّن الإضافي",
+  },
+  FineTuned: {
+    Sysmessage: "أنت مساعد ي",
   },
   Mask: {
     Name: "الأقنعة",

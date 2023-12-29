@@ -1,15 +1,20 @@
+import { getClientConfig } from "../config/client";
 import { SubmitKey } from "../store/config";
+
+const isApp = !!getClientConfig()?.isApp;
 
 const cn = {
   WIP: "该功能仍在开发中……",
   Error: {
-    Unauthorized:
-      "您当前没有授权，请先前往[登录](/#/auth)页输入工号和将军令进行授权验证",
+    Unauthorized: isApp
+      ? "检测到无效 API Key，请前往[设置](/#/settings)页检查 API Key 是否配置正确。"
+      : "访问密码不正确或为空，请前往[登录](/#/auth)页输入正确的访问密码，或者在[设置](/#/settings)页填入你自己的 OpenAI API Key。",
   },
   Auth: {
     Title: "授权认证",
     Tips: "管理员开启了授权验证，请在下方填入您的工号和将军令",
     Account: "在此处填写工号",
+    SubTips: "或者输入你的 OpenAI 或 Google API 密钥",
     Input: "在此处填写密码",
     Confirm: "确认",
     Later: "稍后再说",
@@ -20,6 +25,7 @@ const cn = {
   Chat: {
     SubTitle: (count: number) => `共 ${count} 条对话`,
     EditMessage: {
+      Title: "编辑消息记录",
       Topic: {
         Title: "聊天主题",
         SubTitle: "更改当前聊天主题",
@@ -40,7 +46,7 @@ const cn = {
     },
     Commands: {
       new: "新建聊天",
-      newm: "从角色新建聊天",
+      newm: "从面具新建聊天",
       next: "下一个聊天",
       prev: "上一个聊天",
       clear: "清除上下文",
@@ -55,7 +61,7 @@ const cn = {
         dark: "深色模式",
       },
       Prompt: "快捷指令",
-      Masks: "所有角色",
+      Masks: "所有面具",
       Clear: "清除聊天",
       Settings: "对话设置",
     },
@@ -71,7 +77,7 @@ const cn = {
     Send: "发送",
     Config: {
       Reset: "清除记忆",
-      SaveAs: "存为角色",
+      SaveAs: "存为面具",
     },
     IsContext: "预设提示词",
   },
@@ -80,15 +86,15 @@ const cn = {
     Copy: "全部复制",
     Download: "下载文件",
     Share: "分享到 ShareGPT",
-    MessageFromYou: "来自你的消息",
-    MessageFromChatGPT: "来自 ChatGPT 的消息",
+    MessageFromYou: "用户",
+    MessageFromChatGPT: "ChatGPT",
     Format: {
       Title: "导出格式",
       SubTitle: "可以导出 Markdown 文本或者 PNG 图片",
     },
     IncludeContext: {
-      Title: "包含角色上下文",
-      SubTitle: "是否在消息中展示角色上下文",
+      Title: "包含面具上下文",
+      SubTitle: "是否在消息中展示面具上下文",
     },
     Steps: {
       Select: "选取",
@@ -170,14 +176,61 @@ const cn = {
       Title: "预览气泡",
       SubTitle: "在预览气泡中预览 Markdown 内容",
     },
+    AutoGenerateTitle: {
+      Title: "自动生成标题",
+      SubTitle: "根据对话内容生成合适的标题",
+    },
+    Sync: {
+      CloudState: "云端数据",
+      NotSyncYet: "还没有进行过同步",
+      Success: "同步成功",
+      Fail: "同步失败",
+
+      Config: {
+        Modal: {
+          Title: "配置云同步",
+          Check: "检查可用性",
+        },
+        SyncType: {
+          Title: "同步类型",
+          SubTitle: "选择喜爱的同步服务器",
+        },
+        Proxy: {
+          Title: "启用代理",
+          SubTitle: "在浏览器中同步时，必须启用代理以避免跨域限制",
+        },
+        ProxyUrl: {
+          Title: "代理地址",
+          SubTitle: "仅适用于本项目自带的跨域代理",
+        },
+
+        WebDav: {
+          Endpoint: "WebDAV 地址",
+          UserName: "用户名",
+          Password: "密码",
+        },
+
+        UpStash: {
+          Endpoint: "UpStash Redis REST Url",
+          UserName: "备份名称",
+          Password: "UpStash Redis REST Token",
+        },
+      },
+
+      LocalState: "本地数据",
+      Overview: (overview: any) => {
+        return `${overview.chat} 次对话，${overview.message} 条消息，${overview.prompt} 条提示词，${overview.mask} 个面具`;
+      },
+      ImportFailed: "导入失败",
+    },
     Mask: {
       Splash: {
-        Title: "角色启动页",
-        SubTitle: "新建聊天时，展示角色启动页",
+        Title: "面具启动页",
+        SubTitle: "新建聊天时，展示面具启动页",
       },
       Builtin: {
-        Title: "隐藏内置角色",
-        SubTitle: "在所有角色列表中隐藏内置面具",
+        Title: "隐藏内置面具",
+        SubTitle: "在所有面具列表中隐藏内置面具",
       },
     },
     Prompt: {
@@ -206,11 +259,6 @@ const cn = {
       Title: "历史消息长度压缩阈值",
       SubTitle: "当未压缩的历史消息超过该值时，将进行压缩",
     },
-    Token: {
-      Title: "API Key",
-      SubTitle: "使用自己的 Key 可绕过密码访问限制",
-      Placeholder: "OpenAI API Key",
-    },
 
     Usage: {
       Title: "余额查询",
@@ -221,19 +269,73 @@ const cn = {
       Check: "重新检查",
       NoAccess: "输入 API Key 或访问密码查看余额",
     },
-    AccessCode: {
-      Title: "访问密码",
-      SubTitle: "管理员已开启加密访问",
-      Placeholder: "请输入访问密码",
+
+    Access: {
+      AccessCode: {
+        Title: "访问密码",
+        SubTitle: "管理员已开启加密访问",
+        Placeholder: "请输入访问密码",
+      },
+      CustomEndpoint: {
+        Title: "自定义接口",
+        SubTitle: "是否使用自定义 Azure 或 OpenAI 服务",
+      },
+      Provider: {
+        Title: "模型服务商",
+        SubTitle: "切换不同的服务商",
+      },
+      OpenAI: {
+        ApiKey: {
+          Title: "API Key",
+          SubTitle: "使用自定义 OpenAI Key 绕过密码访问限制",
+          Placeholder: "OpenAI API Key",
+        },
+
+        Endpoint: {
+          Title: "接口地址",
+          SubTitle: "除默认地址外，必须包含 http(s)://",
+        },
+      },
+      Azure: {
+        ApiKey: {
+          Title: "接口密钥",
+          SubTitle: "使用自定义 Azure Key 绕过密码访问限制",
+          Placeholder: "Azure API Key",
+        },
+
+        Endpoint: {
+          Title: "接口地址",
+          SubTitle: "样例：",
+        },
+
+        ApiVerion: {
+          Title: "接口版本 (azure api version)",
+          SubTitle: "选择指定的部分版本",
+        },
+      },
+      Google: {
+        ApiKey: {
+          Title: "接口密钥",
+          SubTitle: "使用自定义 Google AI Studio API Key 绕过密码访问限制",
+          Placeholder: "Google AI Studio API Key",
+        },
+
+        Endpoint: {
+          Title: "接口地址",
+          SubTitle: "样例：",
+        },
+
+        ApiVerion: {
+          Title: "接口版本 (gemini-pro api version)",
+          SubTitle: "选择指定的部分版本",
+        },
+      },
+      CustomModel: {
+        Title: "自定义模型名",
+        SubTitle: "增加自定义模型可选项，使用英文逗号隔开",
+      },
     },
-    Endpoint: {
-      Title: "接口地址",
-      SubTitle: "除默认地址外，必须包含 http(s)://",
-    },
-    CustomModel: {
-      Title: "自定义模型名",
-      SubTitle: "增加自定义模型可选项，使用英文逗号隔开",
-    },
+
     Model: "模型 (model)",
     Temperature: {
       Title: "随机性 (temperature)",
@@ -263,7 +365,7 @@ const cn = {
     Prompt: {
       History: (content: string) => "这是历史聊天总结作为前情提要：" + content,
       Topic:
-        "使用四到五个字直接返回这句话的简要主题，不要解释、不要标点、不要语气词、不要多余文本，如果没有主题，请直接返回“闲聊”",
+        "使用四到五个字直接返回这句话的简要主题，不要解释、不要标点、不要语气词、不要多余文本，不要加粗，如果没有主题，请直接返回“闲聊”",
       Summarize:
         "简要总结一下对话内容，用作后续的上下文提示 prompt，控制在 200 字以内",
     },
@@ -272,22 +374,29 @@ const cn = {
     Success: "已写入剪切板",
     Failed: "复制失败，请赋予剪切板权限",
   },
+  Download: {
+    Success: "内容已下载到您的目录。",
+    Failed: "下载失败。",
+  },
   Context: {
     Toast: (x: any) => `包含 ${x} 条预设提示词`,
     Edit: "当前对话设置",
-    Add: "新增预设对话",
+    Add: "新增一条对话",
     Clear: "上下文已清除",
     Revert: "恢复上下文",
   },
   Plugin: {
     Name: "插件",
   },
+  FineTuned: {
+    Sysmessage: "你是一个助手",
+  },
   Mask: {
-    Name: "角色",
+    Name: "面具",
     Page: {
-      Title: "预设角色角色",
+      Title: "预设角色面具",
       SubTitle: (count: number) => `${count} 个预设角色定义`,
-      Search: "搜索角色角色",
+      Search: "搜索角色面具",
       Create: "新建",
     },
     Item: {
@@ -300,7 +409,7 @@ const cn = {
     },
     EditModal: {
       Title: (readonly: boolean) =>
-        `编辑预设角色 ${readonly ? "（只读）" : ""}`,
+        `编辑预设面具 ${readonly ? "（只读）" : ""}`,
       Download: "下载预设",
       Clone: "克隆预设",
     },
@@ -317,8 +426,8 @@ const cn = {
         SubTitle: "隐藏后预设对话不会出现在聊天界面",
       },
       Share: {
-        Title: "分享此角色",
-        SubTitle: "生成此角色的直达链接",
+        Title: "分享此面具",
+        SubTitle: "生成此面具的直达链接",
         Action: "复制链接",
       },
     },
@@ -328,8 +437,8 @@ const cn = {
     Skip: "直接开始",
     NotShow: "不再展示",
     ConfirmNoShow: "确认禁用？禁用后可以随时在设置中重新启用。",
-    Title: "挑选一个角色",
-    SubTitle: "现在开始，与角色背后的灵魂思维碰撞",
+    Title: "挑选一个面具",
+    SubTitle: "现在开始，与面具背后的灵魂思维碰撞",
     More: "查看全部",
   },
 
@@ -344,8 +453,15 @@ const cn = {
     Close: "关闭",
     Create: "新建",
     Edit: "编辑",
+    Export: "导出",
+    Import: "导入",
+    Sync: "同步",
+    Config: "配置",
   },
   Exporter: {
+    Description: {
+      Title: "只有清除上下文之后的消息会被展示",
+    },
     Model: "模型",
     Messages: "消息",
     Topic: "主题",

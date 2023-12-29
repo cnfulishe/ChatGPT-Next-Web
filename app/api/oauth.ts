@@ -1,7 +1,7 @@
 import { NextRequest } from "next/server";
 import { getServerSideConfig } from "../config/server";
 import md5 from "spark-md5";
-import { ACCESS_CODE_PREFIX } from "../constant";
+import { ACCESS_CODE_PREFIX, ModelProvider } from "../constant";
 import { userTokenAuth } from "./user_service";
 
 function getIP(req: NextRequest) {
@@ -25,7 +25,10 @@ function parseApiKey(bearToken: string) {
   };
 }
 
-export async function authHandler(req: NextRequest) {
+export async function authHandler(
+  req: NextRequest,
+  modelProvider: ModelProvider,
+) {
   const authToken = req.headers.get("Authorization") ?? "";
 
   // check if it is openai api key or user token
