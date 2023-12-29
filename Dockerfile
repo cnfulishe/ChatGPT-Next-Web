@@ -1,4 +1,4 @@
-FROM node:18-alpine AS base
+FROM --platform=linux/amd64 node:18-alpine AS base
 
 FROM base AS deps
 
@@ -15,9 +15,9 @@ FROM base AS builder
 
 RUN apk update && apk add --no-cache git
 
-ENV OPENAI_API_KEY=""
+ENV OPENAI_API_KEY="ABC"
 ENV GOOGLE_API_KEY=""
-ENV CODE=""
+ENV CODE="your-password"
 
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -31,9 +31,11 @@ WORKDIR /app
 RUN apk add proxychains-ng
 
 ENV PROXY_URL=""
-ENV OPENAI_API_KEY=""
+ENV OPENAI_API_KEY="ABC"
 ENV GOOGLE_API_KEY=""
-ENV CODE=""
+ENV CODE="your-password"
+ENV HIDE_USER_API_KEY=true
+ENV HIDE_GITHUB=true
 
 COPY --from=builder /app/public ./public
 COPY --from=builder /app/.next/standalone ./

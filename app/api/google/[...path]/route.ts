@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "../../auth";
+import { authHandler } from "../../oauth";
 import { getServerSideConfig } from "@/app/config/server";
 import { GEMINI_BASE_URL, Google, ModelProvider } from "@/app/constant";
 
@@ -38,8 +39,31 @@ async function handle(
     },
     10 * 60 * 1000,
   );
-
-  const authResult = auth(req, ModelProvider.GeminiPro);
+  return NextResponse.json(
+    [
+      {
+        error: {
+          code: 400,
+          message: "暂未推出Google Gemini服务，请敬期待！",
+          status: "INVALID_ARGUMENT",
+          details: [
+            {
+              "@type": "type.googleapis.com/google.rpc.ErrorInfo",
+              reason: "API_KEY_INVALID",
+              domain: "googleapis.com",
+              metadata: {
+                service: "generativelanguage.googleapis.com",
+              },
+            },
+          ],
+        },
+      },
+    ],
+    {
+      status: 200,
+    },
+  );
+  const authResult = await authHandler(req, ModelProvider.GeminiPro);
   if (authResult.error) {
     return NextResponse.json(authResult, {
       status: 401,
